@@ -21,3 +21,7 @@ Route::get('/debug', function() {
     # при переходе в каталог debug в url (к примеру https://example.com/debug)
     return view('welcome');
 })->name('laravel_welcome');
+
+Route::get('/easter_egg', function() {
+    return view('default_easter_egg_lol');
+})->name('easter_egg_lol');
