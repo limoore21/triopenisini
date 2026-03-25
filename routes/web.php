@@ -25,3 +25,7 @@ Route::get('/debug', function() {
 Route::get('/easter_egg', function() {
     return view('default_easter_egg_lol');
 })->name('easter_egg_lol');
+
+Route::get('/', function () {
+    return view('index'); #resources/views/index.blade.php
+});
