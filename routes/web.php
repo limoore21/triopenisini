@@ -29,3 +29,5 @@ Route::get('/easter_egg', function() {
 Route::get('/', function () {
     return view('index'); #resources/views/index.blade.php
 });
+
+Route::resource('posts', PostController::class);
