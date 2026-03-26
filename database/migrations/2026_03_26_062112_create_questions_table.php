@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('questions',
             function (Blueprint $table) {
             $table->id();
-            $table->string('title'); #Заголовок вопроса
-                $table->text('content'); #Описание вопроса
-                $table -> foreignId('user_id')->constrained()->cascadeOnDelete();#связываем вопрос с пользователем
-            });
+            $table -> foreignId('user_id') -> constrained('users'); #user_id:id
+                $table ->string('title', 255);
+                $table ->text('body');
+                $table ->timestamps();
+        });
     }
 
     /**
