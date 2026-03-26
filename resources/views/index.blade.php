@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+{{--    @vite(['resources/css/app.css', 'resources/js/app.js'])--}}
     <title>Триопениси — Главная</title>
 </head>
 <body>
