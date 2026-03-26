@@ -1,19 +1,61 @@
 <?php
-namespace App\Http\Controllers; # адрес прописки файла (чтобы ларавел его нашел)
 
-class QuestionController extends Controller # наследуем базовые фишки главные функции и права главного контроллера ларавела, благодаря этому не нужно каждый раз прописывать безопасноть,валидацию и так далее
+namespace App\Http\Controllers;
 
+use App\Models\Question;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class QuestionController extends Controller
 {
-// метод index — это действие которое вызывается при заходе на главную
-public function index()
-{
-//мы подготавливаем данные (пока вручную скоро из базы)
-$data = [
-'name' => 'Максимка',
-'project' => 'Triopenisini'
-];
 
-//мы говорим: возьми шаблон index.blade.php и передай туда эти данные
-return view('index', $data);
-}
+     # Показывает главную страницу со списком вопросов и юзеров
+
+    public function index()
+    {
+        // Берем вопросы с авторами сортируем: новые вверху
+        $questions = Question::with('user')->latest()->get();
+
+        // Берем всех пользователей для боковой панели
+        $users = User::all();
+
+        return view('questions.index', compact('questions', 'users'));
+    }
+
+
+//   Сохраняет новый вопрос в базу
+
+    public function store(Request $request)
+    {
+        //  Проверяем данные
+        $request->validate([
+            'title' => 'required|max:255',
+            'body' => 'required',
+        ]);
+
+        //  Берем первого юзера (пока нет авторизации)
+        $user = User::first();
+
+        //  Создаем вопрос через связь
+        $user->questions()->create([
+            'title' => $request->title,
+            'body' => $request->body,
+        ]);
+
+        return redirect()->back()->with('success', 'Вопрос успешно добавлен!');
+    }
+
+
+//     Удаляет вопрос из базы
+
+    public function destroy($id)
+    {
+        // Находим или выдаем 404 ошибку
+        $question = Question::findOrFail($id);
+
+        // Удаляем
+        $question->delete();
+
+        return redirect()->back()->with('success', 'Вопрос удален!');
+    }
 }

@@ -1,18 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+# ОБЯЗАТЕЛЬНО: Импортируем контроллер, чтобы Laravel его "увидел"
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\PostController;
 
 # Функция при переходе в корень проекта - обязательно!
 # Директория в URL адреса. В этом случае если пользователь перейдет в
-# корень проекта (https://example.com/) то будет вызываться вьюшка main_page
+# корень проекта (https://example.com/) то будет вызываться метод index в QuestionController
 #             ⌄⌄⌄⌄⌄
-Route::get('/', function () {
-    # Здесь берем название файла из resources/views/{имя}.blade.php
-    return view('main_page');
-})->name('main');
+Route::get('/', [QuestionController::class, 'index'])->name('main');
 #   ^^^^^^^^^^^^^^^^^^
-# Здесь опционально задаем псевдоним для нашего файла к которому будем обращаться
-# в файлах .blade.php для перехода через {{ route(name) }}
+# Здесь мы связали главную страницу с твоим контроллером, который ты создал.
 
 
 # Здесь будет вызываться welcome.blade.php из каталога resources/views/welcome.blade.php
@@ -26,8 +25,9 @@ Route::get('/easter_egg', function() {
     return view('default_easter_egg_lol');
 })->name('easter_egg_lol');
 
-Route::get('/', function () {
-    return view('index'); #resources/views/index.blade.php
-});
-
+# Ресурсный роут для постов (создает сразу index, create, store и т.д.)
 Route::resource('posts', PostController::class);
+
+Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
+
+Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->name('questions.destroy');

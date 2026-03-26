@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -19,9 +20,10 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nickname',
         'email',
         'password',
+        'is_admin'
     ];
 
     /**
@@ -46,4 +48,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    // Добавляем связь с вопросами
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    // Исправляем на множественное число для порядка, необязательно но пусть будет
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+    public function answer(){
+        return
+            $this->hasMany(Answer::class);
+    }
 }
+
