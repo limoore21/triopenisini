@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 # ОБЯЗАТЕЛЬНО: Импортируем контроллер, чтобы Laravel его "увидел"
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\AnswerController;
 
 # Функция при переходе в корень проекта - обязательно!
 # Директория в URL адреса. В этом случае если пользователь перейдет в
@@ -31,3 +32,5 @@ Route::resource('posts', PostController::class);
 Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
 
 Route::delete('/questions/{id}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+
+Route::post('/questions/{question}/answers', [AnswerController::class, 'store'])->name('answers.store');

@@ -12,6 +12,16 @@
 
     .question-card { border: 1px solid #666; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
     .alert-success { background: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border-radius: 5px; }
+
+    .answers-section { margin-left: 30px;margin-top: 15px;padding-left: 15px;border-left: 2px solid #eee; }
+    .answer-item { background: #fafafa;padding: 8px;margin-bottom: 8px;border-radius: 4px;border: 1px solid #eee; }
+    .answer-item p { margin: 0;font-size: 14px; }
+    .answer-item small { color: #888; }
+    .answer-form { margin-top: 10px;display: flex;gap: 10px; }
+    .answer-input { flex: 1;padding: 6px 10px;border: 1px solid #ccc;border-radius: 4px; }
+    .btn-answer { background: #007bff; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 13px; transition: background 0.2s;}
+    .btn-answer:hover { background: #0056b3; }
+    .answer-count { background: #e9ecef; color: #495057; font-size: 11px; padding: 3px 10px; border-radius: 12px; margin-left: 8px; font-weight: 500; vertical-align: middle; display: inline-flex; align-items: center; gap: 4px; }
 </style>
 
 <div class="container">
@@ -36,9 +46,30 @@
         <h2>Лента вопросов</h2>
         @forelse($questions as $question)
             <div class="question-card">
-                <strong>{{ $question->title }}</strong>
+                <strong>
+                    {{ $question->title }}
+                    <span class="answer-count">
+            💬           Ответов: {{ $question->answers_count }}
+                    </span>
+                </strong>
+{{--                <strong>{{ $question->title }}</strong>--}}
                 <p>{{ $question->body }}</p>
                 <small>Спросил: {{ $question->user->nickname }}</small>
+
+                <div class="answers-section">
+                    @foreach($question->answers as $answer)
+                        <div class="answer-item">
+                            <p>{{ $answer->body }}</p>
+                            <small>— {{ $answer->user->nickname }}</small>
+                        </div>
+                    @endforeach
+
+                    <form action="{{ route('answers.store', $question->id) }}" method="POST" class="answer-form">
+                        @csrf
+                        <input type="text" name="body" placeholder="Написать ответ..." class="answer-input" required>
+                        <button type="submit" class="btn-answer">Ответить</button>
+                    </form>
+                </div>
 
                 <hr> <form action="{{ route('questions.destroy', $question->id) }}" method="POST" style="margin-top: 10px;">
                     @csrf

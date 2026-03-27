@@ -13,10 +13,12 @@ class QuestionController extends Controller
 
     public function index()
     {
-        // Берем вопросы с авторами сортируем: новые вверху
-        $questions = Question::with('user')->latest()->get();
-
-        // Берем всех пользователей для боковой панели
+        // Загружаем вопросы вместе с их авторами, ответами и авторами ответов
+// Добавляем подсчет ответов через withCount
+        $questions = Question::with(['user', 'answers.user'])
+            ->withCount('answers')
+            ->latest()
+            ->get();
         $users = User::all();
 
         return view('questions.index', compact('questions', 'users'));

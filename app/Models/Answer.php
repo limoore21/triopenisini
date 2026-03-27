@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Answer extends Model
 {
     //разрешаем записывать текст ответа и айди связей
-    protected $fillable = ['question_id', 'user_id'];
+    protected $fillable = ['body', 'question_id', 'user_id'];
 
 //    ответ принадлежит вопросу
     public function question(){
