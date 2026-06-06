@@ -32,11 +32,11 @@ class QuestionController extends Controller
         //  Проверяем данные
         $request->validate([
             'title' => 'required|max:255',
-            'body' => 'required',
+            'body' => 'required|max:5000',
         ]);
 
-        //  Берем первого юзера (пока нет авторизации)
-        $user = User::first();
+        //  Берем авторизованного юзера, fallback на первого
+        $user = auth()->user() ?? User::first();
 
         //  Создаем вопрос через связь
         $user->questions()->create([

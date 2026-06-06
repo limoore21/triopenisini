@@ -9,20 +9,17 @@ use Illuminate\Http\Request;
 
 class AnswerController extends Controller
 {
-    public function store(Request $request, $questionId)
+    public function store(Request $request, Question $question)
     {
-        //Валидация
+        // Валидация с ограничением
         $request->validate([
-            'body' => 'required|min:2'
+            'body' => 'required|min:2|max:2000'
         ]);
 
-        //Находим вопрос к которому пишем ответ
-        $question = Question::findOrFail($questionId);
-
-        //Создаем ответ (пока привязываем к первому юзеру, как и раньше)
+        // Создаем ответ - user_id берем из авторизации, пока fallback на первого юзера
         $question->answers()->create([
             'body' => $request->body,
-            'user_id' => User::first()->id,
+            'user_id' => auth()->id() ?? User::first()->id,
         ]);
 
         return redirect()->back()->with('success', 'Ответ опубликован!');
